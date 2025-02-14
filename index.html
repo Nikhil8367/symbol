@@ -3,158 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Quiz</title>
+    <title>Number Redirect</title>
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
             height: 100vh;
             display: flex;
+            align-items: center;
             justify-content: center;
-            align-items: center;
-            background: linear-gradient(to right, #4a90e2, #9145b6);
-            color: white;
-            overflow: hidden;
+            margin: 0;
         }
-        .container, .quiz-container {
-            text-align: center;
-            width: 80%;
-            max-width: 600px;
-            background: rgba(255, 255, 255, 0.2);
+        .container {
+            background: white;
             padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 300px;
         }
-        .quiz-container {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-        }
-        .options label {
-            display: block;
-            background: rgba(255, 255, 255, 0.3);
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .options label.selected {
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            color: white;
+        h2 {
+            margin-bottom: 15px;
         }
         input {
-    width: 80%;
-    padding: 12px;
-    font-size: 16px;
-    border: 2px solid transparent;
-    border-radius: 25px;
-    outline: none;
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    text-align: center;
-    transition: 0.3s ease-in-out;
-    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2);
-}
-
-input:focus {
-    border: 2px solid #ff416c;
-    box-shadow: 0 0 10px rgba(255, 65, 108, 0.6);
-    background: rgba(255, 255, 255, 0.3);
-}
-
-::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-    transition: 0.3s ease-in-out;
-}
-
-input:focus::placeholder {
-    opacity: 0.5;
-}
-        .btn {
-            padding: 12px 20px;
-            background: linear-gradient(to right, #ff416c, #ff4b2b);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
+            width: 90%;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
             font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+        input:focus {
+            border-color: #6e8efb;
+        }
+        button {
+            margin-top: 10px;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #6e8efb;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #a777e3;
+        }
+        #errorMessage {
+            color: red;
             margin-top: 10px;
         }
-        .hidden { display: none; }
-
-        .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-box {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.modal-box input {
-    padding: 10px;
-    margin: 10px 0;
-    width: 80%;
-    border: 1px solid #444;
-    border-radius: 5px;
-    background: black;   /* 🔹 Black background */
-    color: white;        /* 🔹 White text */
-    font-size: 18px;     /* 🔹 Bigger dots */
-    text-align: center;
-}
-
-.modal-actions button {
-    margin: 10px;
-    padding: 10px 15px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.modal-actions button:first-child {
-    background: #28a745;
-    color: white;
-}
-
-.modal-actions button:last-child {
-    background: #dc3545;
-    color: rgb(255, 255, 255);
-}
-
     </style>
 </head>
 <body>
-    <div class="container" id="start-container">
-        <h1>Welcome to the Quiz</h1>
-        <p>Enter your team name to begin:</p>
-        <input type="text" id="teamName" placeholder="Team Name" required>
-        <button class="btn" onclick="startQuiz()">Start Quiz</button>
-    </div>
-
-    <div id="quiz-container" class="quiz-container">
-        <h2 id="teamDisplay"></h2>
-        <p id="timer">Time: 0s</p>
-        <div id="quiz-content"></div>
-        <button id="nextBtn" class="btn">Next</button>
-        <button id="submitBtn" class="btn hidden">Submit</button>
-        <p id="warning" style="color: red; font-weight: bold;"></p>
+    <div class="container">
+        <h2>Enter a Number</h2>
+        <input type="number" id="numberInput" placeholder="Enter a number...">
+        <button onclick="checkNumber()">Submit</button>
+        <p id="errorMessage"></p>
     </div>
 
     <script>
-const _0x23aa27=_0x3677;(function(_0x181dfa,_0x4b5ff0){const _0x35f13e=_0x3677,_0x19d33e=_0x181dfa();while(!![]){try{const _0x2b5f84=parseInt(_0x35f13e(0x22e))/0x1+parseInt(_0x35f13e(0x1fa))/0x2+-parseInt(_0x35f13e(0x215))/0x3+parseInt(_0x35f13e(0x234))/0x4+parseInt(_0x35f13e(0x1fb))/0x5*(parseInt(_0x35f13e(0x25f))/0x6)+-parseInt(_0x35f13e(0x26b))/0x7*(parseInt(_0x35f13e(0x25d))/0x8)+-parseInt(_0x35f13e(0x20d))/0x9;if(_0x2b5f84===_0x4b5ff0)break;else _0x19d33e['push'](_0x19d33e['shift']());}catch(_0x28e854){_0x19d33e['push'](_0x19d33e['shift']());}}}(_0x8eed,0x6ea53));const questions=[{'question':_0x23aa27(0x1f4),'options':[_0x23aa27(0x24d),'Wednesday',_0x23aa27(0x1e9),'Friday'],'answer':_0x23aa27(0x222)},{'question':_0x23aa27(0x251),'options':[_0x23aa27(0x26f),_0x23aa27(0x271),_0x23aa27(0x228),_0x23aa27(0x239)],'answer':_0x23aa27(0x26f)},{'question':'What\x20is\x20the\x20probability\x20of\x20getting\x20an\x20even\x20number\x20when\x20a\x20dice\x20is\x20rolled?','options':[_0x23aa27(0x20b),_0x23aa27(0x210),_0x23aa27(0x23f),_0x23aa27(0x1e1)],'answer':'1/2'},{'question':_0x23aa27(0x206),'options':[_0x23aa27(0x269),'10\x20hours',_0x23aa27(0x204),_0x23aa27(0x21f)],'answer':_0x23aa27(0x204)},{'question':_0x23aa27(0x24b),'options':['E/8,F/10',_0x23aa27(0x259),_0x23aa27(0x25b),'D/10,E/10'],'answer':'E/10,F/12'},{'question':_0x23aa27(0x202),'options':[_0x23aa27(0x1fc),_0x23aa27(0x270),_0x23aa27(0x263),_0x23aa27(0x21d)],'answer':_0x23aa27(0x1fc)},{'question':_0x23aa27(0x242),'options':[_0x23aa27(0x230),_0x23aa27(0x25e),_0x23aa27(0x236),_0x23aa27(0x1e2)],'answer':_0x23aa27(0x1e2)},{'question':_0x23aa27(0x231),'options':[_0x23aa27(0x1f3),'Tuesday',_0x23aa27(0x22a),_0x23aa27(0x207)],'answer':_0x23aa27(0x207)},{'question':_0x23aa27(0x24e),'options':[_0x23aa27(0x264),_0x23aa27(0x1e5),_0x23aa27(0x241),'12000'],'answer':'6000'},{'question':_0x23aa27(0x1e0),'options':[_0x23aa27(0x258),_0x23aa27(0x244),_0x23aa27(0x1fe),_0x23aa27(0x1ea)],'answer':_0x23aa27(0x258)}];function _0x8eed(){const _0x3fa096=['wrong','Thursday','₹70','⚠️\x20You\x20switched\x20tabs!\x20Auto-submitting\x20quiz.','documentElement','submitBtn','.modal-overlay','remove','setItem','</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p><strong>Time\x20Taken:</strong>\x20','teamDisplay','Monday','If\x20January\x201,\x201996,\x20was\x20Monday,\x20what\x20day\x20of\x20the\x20week\x20was\x20January\x201,\x201997?','textContent','totalQuestions','score','style','Team:\x20','761436uolVtW','55cjHyHv','Rs.\x2011000','join','₹80','8341343773','selected','toggle','Sohan\x20started\x20a\x20business\x20with\x20a\x20capital\x20of\x20Rs.\x2080000.\x20After\x206\x20months,\x20Mohan\x20joined\x20as\x20a\x20partner\x20by\x20investing\x20Rs.\x2065000.\x20After\x20one\x20year,\x20they\x20earned\x20a\x20total\x20profit\x20of\x20Rs.\x2020000.\x20What\x20is\x20the\x20share\x20of\x20Sohan\x20in\x20the\x20profit?','font-size:\x20200px;\x20background:\x20red;','12\x20hours','innerHeight','A\x20pipe\x20can\x20fill\x20a\x20tank\x20in\x206\x20hours\x20and\x20another\x20pipe\x20can\x20empty\x20the\x20tank\x20in\x2012\x20hours.\x20If\x20both\x20pipes\x20are\x20opened\x20at\x20the\x20same\x20time,\x20the\x20tank\x20can\x20be\x20filled\x20in:','Saturday','parse','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label\x20onclick=\x22selectOption(this)\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22radio\x22\x20name=\x22q\x22\x20value=\x22','getElementById','1/6','</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p><strong>Correct:</strong>\x20','6251976LcHbMh','attempted','question','1/3','⚠️\x20Split-screen\x20detected!\x20Auto-submitting\x20quiz.','<div\x20class=\x22options\x22>','</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22btn\x22\x20onclick=\x22resetQuiz()\x22\x20style=\x22\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background:\x20rgba(255,\x200,\x200,\x200.8);\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20color:\x20white;\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20padding:\x2010px\x2020px;\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border:\x20none;\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border-radius:\x205px;\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20cursor:\x20pointer;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20transition:\x200.3s;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x22\x20onmouseover=\x22this.style.background=\x27red\x27\x22\x20onmouseout=\x22this.style.background=\x27rgba(255,\x200,\x200,\x200.8)\x27\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20Reset\x20Quiz\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20','visibilitychange','1045860YKVIEE','innerHTML','quizResults','%c\x20','F12','exitFullscreen','trim','createElement','Rs.\x209000','.options\x20label.selected','14\x20hours','quiz-container','preventDefault','Wednesday','🚨\x20Please\x20enter\x20your\x20team\x20name.','querySelector','hidden','start-container','classList','8.5\x20km/hr','length','Friday','fullscreenElement','resize','now','872650iKGTnB','stringify','120m','If\x20today\x20is\x20Monday,\x20what\x20day\x20of\x20the\x20week\x20will\x20it\x20be\x20after\x2061\x20days?','appendChild','</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p><strong>Wrong:</strong>\x20','1333864WHAfxg','correct','140m','timeTaken','addEventListener','9\x20km/hr','warning','teamName','\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22modal-overlay\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22modal-box\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h2>🔐\x20Reset\x20Quiz</h2>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p>Enter\x20the\x20reset\x20password\x20to\x20proceed:</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22password\x22\x20id=\x22resetPassword\x22\x20placeholder=\x22••••••••\x22\x20autofocus>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22modal-actions\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20onclick=\x22confirmReset()\x22>✅\x20Confirm</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20onclick=\x22closeModal()\x22>❌\x20Cancel</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20','\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20style=\x22\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20max-width:\x20500px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20margin:\x20auto;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20padding:\x2020px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20text-align:\x20center;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background:\x20rgba(0,\x200,\x200,\x200.6);\x20/*\x20Transparent\x20Dark\x20*/\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20backdrop-filter:\x20blur(10px);\x20/*\x20Blurred\x20Effect\x20*/\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border-radius:\x2010px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20color:\x20white;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20box-shadow:\x200\x200\x2010px\x20rgba(0,0,0,0.5);\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h2\x20style=\x22margin-bottom:\x2010px;\x22>🎉\x20Quiz\x20Completed</h2>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p><strong>Team:</strong>\x20','querySelectorAll','1/2','</div>','6000','A\x20train\x20moving\x20at\x20a\x20speed\x20of\x2080\x20km/hr\x20crosses\x20a\x20pole\x20in\x207\x20seconds.\x20Find\x20the\x20length\x20of\x20the\x20train.','<p><strong>Q','₹100','keydown','shiftKey','requestFullscreen','clear','🚨\x20DevTools\x20detected!\x20Auto-submitting\x20quiz.','⏳\x20Time:\x20','Find\x20the\x20missing\x20term:\x20A/2,\x20B/4,\x20C/6,\x20D/8,\x20____','contextmenu','Tuesday','Ten\x20friends\x20planned\x20to\x20share\x20equally\x20the\x20cost\x20of\x20buying\x20a\x20gift\x20for\x20their\x20teacher.\x20When\x20two\x20of\x20them\x20decided\x20not\x20to\x20contribute,\x20each\x20of\x20the\x20other\x20friends\x20had\x20to\x20pay\x20Rs\x20150\x20more.\x20The\x20cost\x20of\x20the\x20gift\x20was\x20Rs.\x20____','debugger','ctrlKey','A\x20running\x20man\x20crosses\x20a\x20bridge\x20of\x20length\x20500\x20meters\x20in\x204\x20minutes.\x20At\x20what\x20speed\x20is\x20he\x20running?','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20','timer','🚨\x20Please\x20select\x20an\x20answer\x20before\x20moving\x20to\x20the\x20next\x20question.','key','answer','click','₹90','E/12,F/14','log','E/10,F/12','innerWidth','16arUXqW','135m','427782rluSvU','floor','outerHeight','value','Rs.\x2012000','666',':</strong>\x20','nextBtn','none','quiz-content','6\x20hours','resetPassword','3061149AHfdkS','filter','display','height','7.5\x20km/hr','Rs.\x2010000','8\x20km/hr','⚠️\x20Window\x20was\x20minimized!\x20Auto-submitting\x20quiz.','.options\x20label','A\x20store\x20sells\x20apples\x20at\x20₹25\x20each.\x20If\x20you\x20buy\x204\x20apples,\x20you\x20get\x20a\x2010%\x20discount.\x20How\x20much\x20will\x204\x20apples\x20cost?','2/3','155m','map','reload','3000','copy','</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p><strong>Attempted:</strong>\x20'];_0x8eed=function(){return _0x3fa096;};return _0x8eed();}let currentQuestionIndex=0x0,userAnswers=Array(questions[_0x23aa27(0x229)])['fill'](null),startTime,timerInterval,quizSubmitted=![];function checkPreviousAttempt(){const _0x24376e=_0x23aa27;let _0x28e16f=localStorage['getItem'](_0x24376e(0x217));_0x28e16f&&displayResults(JSON[_0x24376e(0x208)](_0x28e16f));}checkPreviousAttempt(),checkPreviousAttempt();function startQuiz(){const _0x3c46b1=_0x23aa27;let _0x232dc7=document[_0x3c46b1(0x20a)](_0x3c46b1(0x23b))[_0x3c46b1(0x262)][_0x3c46b1(0x21b)]();if(!_0x232dc7){alert(_0x3c46b1(0x223));return;}localStorage[_0x3c46b1(0x1f0)](_0x3c46b1(0x23b),_0x232dc7),document[_0x3c46b1(0x20a)](_0x3c46b1(0x1f2))['textContent']=_0x3c46b1(0x1f9)+_0x232dc7,document[_0x3c46b1(0x20a)](_0x3c46b1(0x226))[_0x3c46b1(0x1f8)][_0x3c46b1(0x26d)]=_0x3c46b1(0x267),document[_0x3c46b1(0x20a)](_0x3c46b1(0x220))['style'][_0x3c46b1(0x26d)]='flex',document[_0x3c46b1(0x1ec)][_0x3c46b1(0x247)]()['then'](()=>{const _0x2a8584=_0x3c46b1;startTime=Date[_0x2a8584(0x22d)](),timerInterval=setInterval(updateTimer,0x3e8),loadQuestion(0x0);})['catch'](()=>{alert('⚠️\x20Fullscreen\x20is\x20required!\x20Please\x20allow\x20fullscreen.'),location['reload']();}),document['addEventListener']('fullscreenchange',checkFullscreen),document[_0x3c46b1(0x238)](_0x3c46b1(0x214),checkVisibility),window[_0x3c46b1(0x238)]('blur',checkBlur),window[_0x3c46b1(0x238)]('resize',checkScreenSize);}function updateTimer(){const _0x2671f6=_0x23aa27;let _0x2f1420=Math[_0x2671f6(0x260)]((Date[_0x2671f6(0x22d)]()-startTime)/0x3e8);document['getElementById'](_0x2671f6(0x253))[_0x2671f6(0x1f5)]=_0x2671f6(0x24a)+_0x2f1420+'s';}function loadQuestion(_0x266ed1){const _0x1073f4=_0x23aa27,_0x60a4=document[_0x1073f4(0x20a)](_0x1073f4(0x268));_0x60a4['innerHTML']=_0x1073f4(0x243)+(_0x266ed1+0x1)+_0x1073f4(0x265)+questions[_0x266ed1][_0x1073f4(0x20f)]+'</p>'+_0x1073f4(0x212)+questions[_0x266ed1]['options'][_0x1073f4(0x1e3)](_0x50a81b=>_0x1073f4(0x209)+_0x50a81b+'\x22\x20hidden>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x50a81b+_0x1073f4(0x252))[_0x1073f4(0x1fd)]('')+_0x1073f4(0x240),document[_0x1073f4(0x20a)](_0x1073f4(0x266))['classList']['toggle'](_0x1073f4(0x225),_0x266ed1===questions['length']-0x1),document['getElementById'](_0x1073f4(0x1ed))[_0x1073f4(0x227)][_0x1073f4(0x201)](_0x1073f4(0x225),_0x266ed1!==questions[_0x1073f4(0x229)]-0x1);}function selectOption(_0x4e3d24){const _0x50d434=_0x23aa27;let _0x32e7a6=document[_0x50d434(0x23e)](_0x50d434(0x273));_0x32e7a6['forEach'](_0x365b7c=>_0x365b7c['classList'][_0x50d434(0x1ef)]('selected')),_0x4e3d24['classList']['add'](_0x50d434(0x200));}function saveAnswer(){const _0x2a6778=_0x23aa27;let _0x47653e=document[_0x2a6778(0x224)](_0x2a6778(0x21e));userAnswers[currentQuestionIndex]=_0x47653e?_0x47653e['textContent'][_0x2a6778(0x21b)]():null;}document['getElementById'](_0x23aa27(0x266))[_0x23aa27(0x238)](_0x23aa27(0x257),()=>{const _0x4f2d25=_0x23aa27;saveAnswer();if(userAnswers[currentQuestionIndex]===null){document['getElementById'](_0x4f2d25(0x23a))['textContent']=_0x4f2d25(0x254);return;}document['getElementById'](_0x4f2d25(0x23a))[_0x4f2d25(0x1f5)]='',currentQuestionIndex<questions[_0x4f2d25(0x229)]-0x1&&(currentQuestionIndex++,loadQuestion(currentQuestionIndex));}),document[_0x23aa27(0x20a)](_0x23aa27(0x1ed))['addEventListener']('click',submitQuiz);function _0x3677(_0x4647c5,_0x1ceb3a){const _0x8eedf5=_0x8eed();return _0x3677=function(_0x36774d,_0x483ac1){_0x36774d=_0x36774d-0x1e0;let _0x5692d4=_0x8eedf5[_0x36774d];return _0x5692d4;},_0x3677(_0x4647c5,_0x1ceb3a);}function submitQuiz(){const _0x237e73=_0x23aa27;if(quizSubmitted)return;quizSubmitted=!![],clearInterval(timerInterval),saveAnswer();let _0xc70b4c=userAnswers[_0x237e73(0x26c)](_0x12adae=>_0x12adae!==null)[_0x237e73(0x229)],_0x5093fa=userAnswers['filter']((_0x32ed15,_0xf3c281)=>_0x32ed15===questions[_0xf3c281][_0x237e73(0x256)])[_0x237e73(0x229)],_0xbd40a5=_0xc70b4c-_0x5093fa,_0x1d87ad=Math[_0x237e73(0x260)]((Date[_0x237e73(0x22d)]()-startTime)/0x3e8),_0x1a34c6={'teamName':localStorage['getItem'](_0x237e73(0x23b)),'totalQuestions':questions[_0x237e73(0x229)],'attempted':_0xc70b4c,'correct':_0x5093fa,'wrong':_0xbd40a5,'score':_0x5093fa+'/'+questions[_0x237e73(0x229)],'timeTaken':_0x1d87ad+'s'};localStorage[_0x237e73(0x1f0)](_0x237e73(0x217),JSON[_0x237e73(0x22f)](_0x1a34c6)),displayResults(_0x1a34c6),document[_0x237e73(0x21a)]();}function displayResults(_0x5218ca){const _0xb95a46=_0x23aa27;document['body'][_0xb95a46(0x216)]=_0xb95a46(0x23d)+_0x5218ca[_0xb95a46(0x23b)]+'</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<hr\x20style=\x22border:\x200;\x20height:\x201px;\x20background:\x20rgba(255,255,255,0.2);\x20margin:\x2010px\x200;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p><strong>Total\x20Questions:</strong>\x20'+_0x5218ca[_0xb95a46(0x1f6)]+_0xb95a46(0x1e7)+_0x5218ca[_0xb95a46(0x20e)]+_0xb95a46(0x20c)+_0x5218ca[_0xb95a46(0x235)]+_0xb95a46(0x233)+_0x5218ca[_0xb95a46(0x1e8)]+'</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p><strong>Score:</strong>\x20'+_0x5218ca[_0xb95a46(0x1f7)]+_0xb95a46(0x1f1)+_0x5218ca[_0xb95a46(0x237)]+_0xb95a46(0x213);}function resetQuiz(){const _0x25cc6b=_0x23aa27;let _0x256b09=document[_0x25cc6b(0x21c)]('div');_0x256b09[_0x25cc6b(0x216)]=_0x25cc6b(0x23c),document['body'][_0x25cc6b(0x232)](_0x256b09);}function confirmReset(){const _0xb33fcc=_0x23aa27;let _0xe07b64=document[_0xb33fcc(0x20a)](_0xb33fcc(0x26a))[_0xb33fcc(0x262)];_0xe07b64===_0xb33fcc(0x1ff)?(localStorage[_0xb33fcc(0x248)](),alert('✅\x20Quiz\x20has\x20been\x20reset\x20successfully.'),location[_0xb33fcc(0x1e4)]()):(alert('❌\x20Incorrect\x20password.\x20Quiz\x20reset\x20denied.'),closeModal());}function closeModal(){const _0x3ef7f6=_0x23aa27;document[_0x3ef7f6(0x224)](_0x3ef7f6(0x1ee))['remove']();}function checkScreenSize(){const _0x1d2867=_0x23aa27;(window[_0x1d2867(0x25c)]<screen['width']/1.5||window[_0x1d2867(0x205)]<screen[_0x1d2867(0x26e)]/1.5)&&(alert(_0x1d2867(0x211)),submitQuiz());}function checkFullscreen(){const _0x9e675a=_0x23aa27;!document[_0x9e675a(0x22b)]&&!quizSubmitted&&(alert('⚠️\x20Fullscreen\x20was\x20exited!\x20Auto-submitting\x20quiz.'),submitQuiz());}function checkVisibility(){const _0x48fc0a=_0x23aa27;document['hidden']&&!quizSubmitted&&(alert(_0x48fc0a(0x1eb)),submitQuiz());}function checkBlur(){const _0x2ed5e9=_0x23aa27;!quizSubmitted&&(alert(_0x2ed5e9(0x272)),submitQuiz());}document[_0x23aa27(0x238)](_0x23aa27(0x24c),_0x3bab0c=>_0x3bab0c[_0x23aa27(0x221)]()),document[_0x23aa27(0x238)](_0x23aa27(0x245),_0x38b3dd=>{const _0x348353=_0x23aa27;(_0x38b3dd[_0x348353(0x255)]===_0x348353(0x219)||_0x38b3dd[_0x348353(0x250)]&&_0x38b3dd[_0x348353(0x246)]&&(_0x38b3dd['key']==='I'||_0x38b3dd['key']==='J'||_0x38b3dd['key']==='C')||_0x38b3dd[_0x348353(0x250)]&&_0x38b3dd[_0x348353(0x255)]==='U')&&_0x38b3dd[_0x348353(0x221)]();}),(function(){setInterval(()=>{const _0xdc4add=_0x3677,_0x490c84=new Function(_0xdc4add(0x24f));_0x490c84();},0x64);}()),setInterval(()=>{const _0x3f90c2=_0x23aa27;let _0x27a375=performance[_0x3f90c2(0x22d)]();debugger;let _0x15ab45=performance[_0x3f90c2(0x22d)]();_0x15ab45-_0x27a375>0x64&&(alert(_0x3f90c2(0x249)),submitQuiz());},0x3e8),window[_0x23aa27(0x238)](_0x23aa27(0x22c),()=>{const _0x2d2c48=_0x23aa27;(window['outerWidth']-window[_0x2d2c48(0x25c)]>0xc8||window[_0x2d2c48(0x261)]-window[_0x2d2c48(0x205)]>0xc8)&&(alert(_0x2d2c48(0x249)),submitQuiz());}),document[_0x23aa27(0x238)]('selectstart',_0x5ade3a=>_0x5ade3a['preventDefault']()),document[_0x23aa27(0x238)](_0x23aa27(0x1e6),_0x27c5ec=>_0x27c5ec[_0x23aa27(0x221)]()),setInterval(()=>{const _0x5c2c4c=_0x23aa27;console[_0x5c2c4c(0x25a)](_0x5c2c4c(0x218),_0x5c2c4c(0x203));},0x1);
+        // Define the number groups
+        const array1 = [1, 23, 45, 67, 89, 102, 121, 133, 147, 159, 172, 188, 199, 210, 225, 239, 250, 265, 278, 289, 301, 314, 328, 340, 355, 367, 379, 391, 405];
+        const array2 = [5, 16, 29, 38, 54, 70, 83, 97, 111, 126, 140, 153, 167, 181, 194, 207, 220, 234, 248, 261, 274, 288, 303, 317, 330, 344, 358, 372, 386];
+        const array3 = [456, 7, 18, 31, 42, 58, 74, 87, 101, 115, 129, 143, 157, 170, 184, 197, 212, 226, 241, 255, 268, 283, 296, 310, 325, 338, 352, 366, 380];
+        function checkNumber() {
+            let number = parseInt(document.getElementById("numberInput").value);
+            let errorMessage = document.getElementById("errorMessage");
+
+            if (isNaN(number)) {
+                errorMessage.textContent = "⚠️ Please enter a valid number!";
+                return;
+            }
+
+            if (array1.includes(number)) {
+                window.location.href = "https://nikhil8367.github.io/Quiz/";
+            } else if (array2.includes(number)) {
+                window.location.href = "https://nikhil8367.github.io/quiz2/";
+            } else if (array3.includes(number)) {
+                window.location.href = "https://nikhil8367.github.io/quiz3/";
+            } else {
+                errorMessage.textContent = "❌ Number not found in any category!";
+            }
+        }
     </script>
-    
 </body>
 </html>
